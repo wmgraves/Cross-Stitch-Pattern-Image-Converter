@@ -79,7 +79,6 @@ public class Kernel {
             }
         }
 
-        //System.out.println((int) Math.abs(red/sum) + ", " + (int) Math.abs(green/sum) + ", " + (int) Math.abs(blue/sum));
         return new Color((int) Math.min(Math.abs(red/sum), 255), (int) Math.min(Math.abs(green/sum), 255),
                 (int) Math.min(Math.abs(blue/sum), 255));
     }
@@ -89,8 +88,7 @@ public class Kernel {
     }
 
     public enum KernelType {
-        EDGE_DETECTION_HORIZONTAL(new double[][] {{-1, -2, -1}, {0, 0, 0}, {1, 2, 2}}),
-        EDGE_DETECTION_VERTICAL(new double[][] {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}}),
+        EDGE_DETECTION(new double[][] {{0, -1, 0}, {-1, 4, -1}, {0, -1, 0}}),
         SHARPEN(new double[][] {{-0.5, -1, -0.5}, {-1, 7, -1}, {-0.5, -1, -0.5}}),
         LANCZOS(getLanczosKernel(2, 7, 7));
 
