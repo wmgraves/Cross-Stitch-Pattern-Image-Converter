@@ -5,22 +5,23 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class ColorTransform {
-    public static void transformColors(BufferedImage inputImage, BufferedImage outputImage, ArrayList<Color> colors) {
-        System.out.println("\nModifying colors found in input image...");
+    public static BufferedImage transformColors(BufferedImage image, ArrayList<Color> colors) {
+        System.out.println("\nTransforming colors found in input image...");
 
+        BufferedImage outputImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         int nextStatus = 10;
-        for (int x = 0; x < inputImage.getWidth(); x++) {
-            for (int y = 0; y < inputImage.getHeight(); y++) {
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
                 Color closestColor = null;
                 int closestDistance = 200000;
 
                 for (Color color : colors) {
                     if (closestColor == null) {
                         closestColor = color;
-                        closestDistance = getColorDistance(color, new Color(inputImage.getRGB(x, y)));
+                        closestDistance = getColorDistance(color, new Color(image.getRGB(x, y)));
                     }
                     else {
-                        int temp = getColorDistance(color, new Color(inputImage.getRGB(x, y)));
+                        int temp = getColorDistance(color, new Color(image.getRGB(x, y)));
                         if (temp < closestDistance) {
                             closestColor = color;
                             closestDistance = temp;
@@ -31,13 +32,14 @@ public class ColorTransform {
                 outputImage.setRGB(x, y, closestColor.getRGB());
             }
 
-            if (((float) x) / inputImage.getWidth() * 100 >= nextStatus) {
+            if (((float) x) / image.getWidth() * 100 >= nextStatus) {
                 System.out.println("  " + nextStatus + "%");
                 nextStatus += 10;
             }
         }
 
         System.out.println("Finished modifying colors");
+        return outputImage;
     }
 
     public static int getColorDistance(Color color1, Color color2) {
