@@ -1,13 +1,15 @@
 package ImageProcessing;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class MedianCutQuantization {
-    public static ArrayList<ArrayList<Color>> quantize(BufferedImage image, int maxNumColors) {
-        System.out.println("\nPerforming median cut quantization...");
+    public static ArrayList<ArrayList<Color>> quantize(BufferedImage image, int maxNumColors,
+                                                       ProgressMonitor monitor) {
+        System.out.println("Performing median cut quantization...");
         // Initialize variables
         ArrayList<Color> colors = new ArrayList<>();
 
@@ -34,12 +36,14 @@ public class MedianCutQuantization {
                     newColorBuckets.add(colorBuckets.get(i));
                 }
             }
-
             colorBuckets = newColorBuckets;
-            System.out.println("  Current number of color groups: " + colorBuckets.size() + "/" +
-                    maxNumColors);
+
+            int progress = colorBuckets.size() * monitor.getMaximum() / maxNumColors;
+            monitor.setNote(String.format("Completed %d%%\n", progress));
+            monitor.setProgress(progress);
         }
         System.out.println("Finished quantization");
+        monitor.close();
 
         return colorBuckets;
     }

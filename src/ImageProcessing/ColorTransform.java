@@ -1,15 +1,17 @@
 package ImageProcessing;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class ColorTransform {
-    public static BufferedImage transformColors(BufferedImage image, ArrayList<Color> colors) {
-        System.out.println("\nTransforming colors found in input image...");
+    public static BufferedImage transformColors(BufferedImage image, ArrayList<Color> colors,
+                                                ProgressMonitor monitor) {
+        System.out.println("Transforming colors found in input image...");
+        BufferedImage outputImage = new BufferedImage(image.getWidth(), image.getHeight(),
+                BufferedImage.TYPE_INT_ARGB);
 
-        BufferedImage outputImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        int nextStatus = 10;
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
                 Color closestColor = null;
@@ -32,12 +34,12 @@ public class ColorTransform {
                 outputImage.setRGB(x, y, closestColor.getRGB());
             }
 
-            if (((float) x) / image.getWidth() * 100 >= nextStatus) {
-                System.out.println("  " + nextStatus + "%");
-                nextStatus += 10;
-            }
+            int progress = x * monitor.getMaximum() / image.getWidth();
+            monitor.setNote(String.format("Completed %d%%\n", progress));
+            monitor.setProgress(progress);
         }
 
+        monitor.close();
         System.out.println("Finished modifying colors");
         return outputImage;
     }
