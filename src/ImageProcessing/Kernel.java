@@ -7,7 +7,7 @@ public class Kernel {
 
     public static BufferedImage applyKernel(BufferedImage image, KernelType kernel, int width, int height) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        System.out.println("\nApplying " + kernel.name() + " kernel...");
+        System.out.println("Applying " + kernel.name() + " kernel...");
 
         // Collect kernel sums
         double[][] values = new double[width][height];
@@ -29,7 +29,7 @@ public class Kernel {
 
     public static BufferedImage visualizeKernel(BufferedImage image, KernelType kernel, int width, int height) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        System.out.println("\nCreating " + kernel.name() + " kernel visualization...");
+        System.out.println("Creating " + kernel.name() + " kernel visualization...");
 
         // Collect kernel sums
         double[][] values = new double[width][height];
