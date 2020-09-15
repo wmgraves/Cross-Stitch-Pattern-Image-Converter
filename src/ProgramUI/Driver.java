@@ -1,6 +1,8 @@
 package ProgramUI;
 
+import IO.FlossDataReader;
 import IO.PatternPreviewCreator;
+import IO.Triplet;
 import ImageProcessing.ColorPicker;
 import ImageProcessing.ColorTransform;
 import ImageProcessing.Kernel;
@@ -30,7 +32,8 @@ public class Driver {
         // Get the input image file
         System.out.println("Prompting user to select file...");
         JFileChooser fileSelector = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg",
+                "png");
         fileSelector.setFileFilter(filter);
         fileSelector.setMultiSelectionEnabled(false);
 
@@ -49,45 +52,12 @@ public class Driver {
             return;
         }
 
-        new SettingsUI(image);
+        // Get floss data
+        //TODO: Maybe add a method for the user to specify their own data sheet?
+        HashMap<Color, Triplet<String, String, Boolean>> temp = FlossDataReader.readFlossDataFile();
 
         // Get info from user about desired pattern
-        //TODO: Add UI/method for this
-        HashMap<String, BufferedImage> imagesToSave = new HashMap<>();
-        HashMap<String, Object> settings = new HashMap<>();
-        settings.put("Count", new Integer(18));
-        settings.put("Number of Colors", new Integer(100));
-        settings.put("Output File Path", "C:\\Users\\William\\Desktop\\");
-
-        // Process image based on user inputs
-        //TODO: Add UI/method for this
-        ArrayList<ArrayList<Color>> colorGroups = MedianCutQuantization.quantize(image,
-                (Integer) settings.get("Number of Colors"));
-        ArrayList<Color> colorList = ColorPicker.averageColors(colorGroups);
-
-        int width = 324, height = 216;
-        BufferedImage currentImage = Kernel.applyKernel(image, Kernel.KernelType.LANCZOS, width, height);
-        imagesToSave.put("ScaledDownImage", currentImage);
-        currentImage = Kernel.applyKernel(currentImage, Kernel.KernelType.SHARPEN, width, height);
-        imagesToSave.put("SharpensImage", currentImage);
-        currentImage = ColorTransform.transformColors(currentImage, colorList);
-        imagesToSave.put("FinalImage", currentImage);
-
-        // Create a new image to show the result
-        //TODO: Add method/UI for this
-        System.out.println("\nSaving " + imagesToSave.size() + " output files...");
-        boolean success = true;
-        for (Map.Entry<String, BufferedImage> entry : imagesToSave.entrySet()) {
-            success = success && PatternPreviewCreator.createPNGFile(entry.getValue(),
-                    settings.get("Output File Path") + entry.getKey() + ".png");
-        }
-
-        if (success) {
-            System.out.println("All output files created successfully");
-        }
-        else {
-            System.out.println("Some (or all) output files were not created successfully");
-        }
+        new SettingsUI(image);
     }
 
 }
