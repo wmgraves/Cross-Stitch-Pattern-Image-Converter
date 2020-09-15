@@ -7,5 +7,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="poi-ooxml-4.1.2" level="project" />
+    <orderEntry type="library" exported="" name="poi-4.1.2" level="project" />
+    <orderEntry type="library" exported="" name="xmlbeans-3.1.0" level="project" />
+    <orderEntry type="library" exported="" name="commons-collections4-4.4" level="project" />
+    <orderEntry type="library" exported="" name="commons-compress-1.19" level="project" />
+    <orderEntry type="library" exported="" name="poi-ooxml-schemas-4.1.2" level="project" />
   </component>
 </module>
