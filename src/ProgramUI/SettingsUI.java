@@ -32,7 +32,7 @@ public class SettingsUI {
         // Create the main window
         JFrame window = new JFrame("Pattern Converter Settings");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setSize(735, 550);
+        window.setSize(940, 550);
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
@@ -48,10 +48,10 @@ public class SettingsUI {
         window.add(patternDisplayArea);
         layout.putConstraint(SpringLayout.WEST, patternDisplayArea, pad, SpringLayout.WEST, window);
         layout.putConstraint(SpringLayout.NORTH, patternDisplayArea, pad, SpringLayout.NORTH, window);
-        layout.putConstraint(SpringLayout.WIDTH, patternDisplayArea, maxImageSize.width-pad+2*borderThickness,
-                SpringLayout.WEST, patternDisplayArea);
-        layout.putConstraint(SpringLayout.HEIGHT, patternDisplayArea, maxImageSize.height-pad+2*borderThickness,
-                SpringLayout.NORTH, patternDisplayArea);
+        layout.putConstraint(SpringLayout.WIDTH, patternDisplayArea,
+                maxImageSize.width-pad+2*borderThickness, SpringLayout.WEST, patternDisplayArea);
+        layout.putConstraint(SpringLayout.HEIGHT, patternDisplayArea,
+                maxImageSize.height-pad+2*borderThickness, SpringLayout.NORTH, patternDisplayArea);
         components.put("Pattern Display Area", patternDisplayArea);
 
         // Add pattern size settings
@@ -85,15 +85,16 @@ public class SettingsUI {
         components.put("Fabric Count Label", countLabel);
 
         JTextField textField = new JTextField();
-        textField.setText("12");
+        int initialCount = 12;
+        textField.setText("" + initialCount);
         textField.setVisible(true);
         settingsPanel.add(textField);
         ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.WEST, textField, pad,
                 SpringLayout.EAST, countLabel);
         ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.NORTH, textField, 0,
                 SpringLayout.NORTH, countLabel);
-        ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.EAST, textField, 50,
-                SpringLayout.WEST, textField);
+        ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.EAST, textField, -pad,
+                SpringLayout.EAST, settingsPanel);
         components.put("Fabric Count TextField", textField);
 
         JLabel lengthLabel = new JLabel("Length (in):");
@@ -106,15 +107,15 @@ public class SettingsUI {
         components.put("Length Label", lengthLabel);
 
         textField = new JTextField();
-        textField.setText("0");
+        textField.setText(String.format("%.2f", ((double) image.getWidth()) / initialCount));
         textField.setVisible(true);
         settingsPanel.add(textField);
         ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.WEST, textField, pad,
                 SpringLayout.EAST, lengthLabel);
         ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.NORTH, textField, 0,
                 SpringLayout.NORTH, lengthLabel);
-        ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.EAST, textField, 50,
-                SpringLayout.WEST, textField);
+        ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.EAST, textField, -pad,
+                SpringLayout.EAST, settingsPanel);
         components.put("Length TextField", textField);
 
         JLabel heightLabel = new JLabel("Height (in):");
@@ -127,30 +128,30 @@ public class SettingsUI {
         components.put("Height Label", heightLabel);
 
         textField = new JTextField();
-        textField.setText("0");
+        textField.setText(String.format("%.2f", ((double) image.getHeight()) / initialCount));
         textField.setVisible(true);
         settingsPanel.add(textField);
         ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.WEST, textField, pad,
                 SpringLayout.EAST, heightLabel);
         ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.NORTH, textField, 0,
                 SpringLayout.NORTH, heightLabel);
-        ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.EAST, textField, 50,
-                SpringLayout.WEST, textField);
+        ((SpringLayout) settingsPanel.getLayout()).putConstraint(SpringLayout.EAST, textField, -pad,
+                SpringLayout.EAST, settingsPanel);
         components.put("Height TextField", textField);
 
         settingsPanel.revalidate();
 
-
-        // Add pattern size settings
+        // Add color settings
         JPanel colorsPanel = new JPanel();
         colorsPanel.setBorder(BorderFactory.createLineBorder(Color.gray, borderThickness));
         colorsPanel.setVisible(true);
         colorsPanel.setLayout(new SpringLayout());
         window.add(colorsPanel);
-        layout.putConstraint(SpringLayout.WEST, colorsPanel, pad, SpringLayout.EAST, patternDisplayArea);
-        layout.putConstraint(SpringLayout.NORTH, colorsPanel, pad, SpringLayout.SOUTH, settingsPanel);
+        layout.putConstraint(SpringLayout.WEST, colorsPanel, pad, SpringLayout.EAST, settingsPanel);
+        layout.putConstraint(SpringLayout.NORTH, colorsPanel, 0, SpringLayout.NORTH, settingsPanel);
         layout.putConstraint(SpringLayout.EAST, colorsPanel, 200, SpringLayout.WEST, colorsPanel);
-        layout.putConstraint(SpringLayout.SOUTH, colorsPanel, patternDisplayArea.getHeight()-settingsPanel.getHeight()-pad, SpringLayout.NORTH, colorsPanel);
+        layout.putConstraint(SpringLayout.SOUTH, colorsPanel, patternDisplayArea.getHeight(),
+                SpringLayout.NORTH, colorsPanel);
         components.put("Colors Panel", colorsPanel);
 
         header = new JLabel("Color Information");
@@ -172,7 +173,8 @@ public class SettingsUI {
         components.put("Number of Colors Label", numberLabel);
 
         textField = new JTextField();
-        textField.setText("100");
+        int initialColorNum = 200;
+        textField.setText("" + initialColorNum);
         textField.setVisible(true);
         colorsPanel.add(textField);
         ((SpringLayout) colorsPanel.getLayout()).putConstraint(SpringLayout.WEST, textField, pad,
@@ -183,45 +185,108 @@ public class SettingsUI {
                 SpringLayout.WEST, textField);
         components.put("Number of Colors TextField", textField);
 
-        ScrollPane colorScroll = new ScrollPane();
+        JScrollPane colorScroll = new JScrollPane();
+        colorScroll.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
+        colorScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        colorScroll.getVerticalScrollBar().setUnitIncrement(16);
         colorScroll.setVisible(true);
         colorsPanel.add(colorScroll);
-        ((SpringLayout) colorsPanel.getLayout()).putConstraint(SpringLayout.WEST, colorScroll, 0,
-                SpringLayout.EAST, colorsPanel);
+        ((SpringLayout) colorsPanel.getLayout()).putConstraint(SpringLayout.WEST, colorScroll, pad,
+                SpringLayout.WEST, colorsPanel);
         ((SpringLayout) colorsPanel.getLayout()).putConstraint(SpringLayout.NORTH, colorScroll, pad,
-                SpringLayout.SOUTH, numberLabel);
-        ((SpringLayout) colorsPanel.getLayout()).putConstraint(SpringLayout.EAST, colorScroll, 0,
+                SpringLayout.SOUTH, textField);
+        ((SpringLayout) colorsPanel.getLayout()).putConstraint(SpringLayout.EAST, colorScroll, -pad,
                 SpringLayout.EAST, colorsPanel);
+        ((SpringLayout) colorsPanel.getLayout()).putConstraint(SpringLayout.SOUTH, colorScroll, -pad,
+                SpringLayout.SOUTH, colorsPanel);
         components.put("Color ScollPane", colorScroll);
 
         colorsPanel.revalidate();
 
+
+
+        //TODO: Add more settings stuff for kernels and output type and maybe other things
+
+
+
         // Get floss data
-        flossData = FlossDataReader.readFlossDataFile();
+        ProgressMonitor progressMonitor = new ProgressMonitor(window, "Reading floss data file...",
+                "", 0, 100);
+        flossData = FlossDataReader.readFlossDataFile(progressMonitor);
 
         // Add the image
         components.put("Pattern Display", null);
         updateDisplayImage(originalImage);
 
         // Transform original image to use selection of floss colors
-        ProgressMonitor progressMonitor = new ProgressMonitor(window, "Selecting floss colors...", "",
+        progressMonitor = new ProgressMonitor(window, "Selecting floss colors...", "",
                 0, 100);
-        ArrayList<ArrayList<Color>> colorBuckets = MedianCutQuantization.quantize(originalImage, 100,
+        ArrayList<ArrayList<Color>> colorBuckets = MedianCutQuantization.quantize(originalImage, initialColorNum,
                 progressMonitor);
-        ArrayList<Color> averageColors = ColorPicker.averageColors(colorBuckets);
-        averageColors = ColorPicker.removeDuplicates(averageColors);
-        averageColors = ColorPicker.convertIntoFlossColors(flossData, averageColors);
-        ((JTextField) components.get("Number of Colors TextField")).setText(averageColors.size() + "");
+        selectedColors = ColorPicker.averageColors(colorBuckets);
+        selectedColors = ColorPicker.convertIntoFlossColors(flossData, selectedColors);
+        selectedColors = ColorPicker.removeDuplicates(selectedColors);
+        ((JTextField) components.get("Number of Colors TextField")).setText(selectedColors.size() + "");
+        updateColorList();
         progressMonitor = new ProgressMonitor(window, "Applying floss colors...", "",
                 0, 100);
-        BufferedImage transformedImage = ColorTransform.transformColors(image, averageColors, progressMonitor);
+        BufferedImage transformedImage = ColorTransform.transformColors(image, selectedColors, progressMonitor);
         updateDisplayImage(transformedImage);
 
 
     }
 
     private void updateColorList() {
+        JScrollPane colorScroll = ((JScrollPane) components.get("Color ScollPane"));
+        if (selectedColors.size() <= 0) { return; }
 
+        JPanel container = new JPanel(new GridLayout(0,1));
+        for (Color color : selectedColors) {
+            Triplet<String, String, Boolean> colorData = flossData.get(color);
+            if (colorData == null) {
+                selectedColors.remove(color);
+                continue;
+            }
+
+            SpringLayout currentLayout = new SpringLayout();
+            JPanel currentPanel = new JPanel(currentLayout);
+            currentPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
+
+            JLabel flossName = new JLabel(colorData.getSecond());
+            currentPanel.add(flossName);
+            currentLayout.putConstraint(SpringLayout.NORTH, flossName, 0,
+                    SpringLayout.NORTH, currentPanel);
+            currentLayout.putConstraint(SpringLayout.WEST, flossName, 2,
+                    SpringLayout.WEST, currentPanel);
+
+            JPanel flossColor = new JPanel();
+            flossColor.setBackground(color);
+            flossColor.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+            currentPanel.add(flossColor);
+            currentLayout.putConstraint(SpringLayout.NORTH, flossColor, 3,
+                    SpringLayout.SOUTH, flossName);
+            currentLayout.putConstraint(SpringLayout.WEST, flossColor, 1,
+                    SpringLayout.WEST, flossName);
+            currentLayout.putConstraint(SpringLayout.EAST, flossColor, 40,
+                    SpringLayout.WEST, flossColor);
+            currentLayout.putConstraint(SpringLayout.SOUTH, flossColor, -3,
+                    SpringLayout.SOUTH, currentPanel);
+
+            JLabel flossCode = new JLabel(colorData.getFirst());
+            currentPanel.add(flossCode);
+            currentLayout.putConstraint(SpringLayout.NORTH, flossCode, 0,
+                    SpringLayout.NORTH, flossColor);
+            currentLayout.putConstraint(SpringLayout.WEST, flossCode, 5,
+                    SpringLayout.EAST, flossColor);
+
+            container.add(currentPanel);
+        }
+
+        container.setPreferredSize(new Dimension(colorScroll.getViewport().getWidth(),
+                selectedColors.size() * 40));
+        colorScroll.setViewportView(container);
+        colorScroll.revalidate();
+        components.get("Colors Panel").revalidate();
     }
 
     private void updateDisplayImage(BufferedImage image) {
@@ -239,10 +304,10 @@ public class SettingsUI {
 
         // Position and display new image
         SpringLayout layout = (SpringLayout) patternDisplayArea.getLayout();
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, patternDisplay, 0, SpringLayout.HORIZONTAL_CENTER,
-                patternDisplayArea);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, patternDisplay, 0, SpringLayout.VERTICAL_CENTER,
-                patternDisplayArea);
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, patternDisplay, 0,
+                SpringLayout.HORIZONTAL_CENTER, patternDisplayArea);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, patternDisplay, 0,
+                SpringLayout.VERTICAL_CENTER, patternDisplayArea);
 
         patternDisplayArea.revalidate();
     }
