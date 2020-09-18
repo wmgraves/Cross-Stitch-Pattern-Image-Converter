@@ -52,10 +52,6 @@ public class Driver {
             return;
         }
 
-        // Get floss data
-        //TODO: Maybe add a method for the user to specify their own data sheet?
-        HashMap<Color, Triplet<String, String, Boolean>> temp = FlossDataReader.readFlossDataFile();
-
         // Get info from user about desired pattern
         new SettingsUI(image);
     }
