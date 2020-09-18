@@ -17,6 +17,10 @@ public class MedianCutQuantization {
             for (int y = 0; y < image.getHeight(); y++) {
                 colors.add(new Color(image.getRGB(x, y)));
             }
+
+            int progress = x * monitor.getMaximum()/2 / image.getWidth();
+            monitor.setNote(String.format("Completed %d%%\n", progress));
+            monitor.setProgress(progress);
         }
 
         ArrayList<ArrayList<Color>> colorBuckets = new ArrayList<>();
@@ -38,7 +42,7 @@ public class MedianCutQuantization {
             }
             colorBuckets = newColorBuckets;
 
-            int progress = colorBuckets.size() * monitor.getMaximum() / maxNumColors;
+            int progress = monitor.getMaximum()/2 + colorBuckets.size() * monitor.getMaximum()/2 / maxNumColors;
             monitor.setNote(String.format("Completed %d%%\n", progress));
             monitor.setProgress(progress);
         }
